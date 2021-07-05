@@ -4,10 +4,10 @@
 - Log parsing library that utilizes multiple cores of the system to parse the file in parallel.
 - Consumes costant memory, independed of the file size.
 - The file is broken into chunks of size no more than 750KB. That means, for an octa core processor,
-  no more than 6 MB of memory will be consumed at any time.
+  no more than 6 MB of data will live in the memory at any time.
 - Uses divide and conquer strategy to gather the records. For each chunk, if there is any intersection between
   the provided range and the chunks date range, then only the chunk is processed, skipped altogether otherwise.
-- Since all of this is done is parallel, the process of filtering the records becomes very fast.
+- Since all of this is done in parallel, the process of filtering the records becomes very fast.
 - To run the program, please refer to [running the program](#running-the-Program).
 - Maintains internal cache to process subsequent queries faster.
 
@@ -21,8 +21,8 @@
 |Total Records       |Records Filtered  | exec time parallel | exec time sequential |
 |--------------------|------------------|--------------------|----------------------|
 |3000000             |0                 |0.8046s             |3.2461s               |
-|3000000             |895161            |7.8014s             |39.0130s              | 
-|3000000             |2367315           |3.1274s             |16.5686s              |
+|3000000             |895161            |3.1274s             |16.5686s              | 
+|3000000             |2367315           |7.8014s             |39.0130s              |
 
 
 #### Answering multiple queries
@@ -51,9 +51,9 @@ if __name__ == '__main__':
 
 
 - If you have a list of queries of the form `[[start_date_a, end_date_a], [start_date_b, end_date_b], ...]`, 
-then for each `(start_date, end_date)` query, you can spawn a new process and all the queries will be
+then for each `(start_date, end_date)` query, you can spawn a new process per query and all the queries will be
 answered in parallel.
-- The chunk processor while processing the chunk, stores the metadata of the chunk in an internal process safe cache.
+- The chunk processor, while processing the chunk, stores the metadata of the chunk in an internal, process safe cache.
 Once the cache is populated, the decision of processing a chunk can be made merely by a cache lookup; without having to 
 process the chunk multiple times.
 
